@@ -85,6 +85,8 @@ l_tradeusch_pw90_2007 <- l_tradeusch_pw00_2007*l_no_workers_totcbp_2000/l_no_wor
 
 sum(l_tradeusch_pw90_2007*Table1_data_00$timepwt48)
 
+
+
 l_trade_pw00_1991 <- l_trade_pw*l_no_workers_totcbp_1990/l_no_workers_totcbp_2000*(yr==1990)
 
 #Table2_variables <- 
