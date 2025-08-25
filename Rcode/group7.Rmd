@@ -203,3 +203,37 @@ summary(table3_2_6)
 ```
 
 standard error が論文のtable3 IIの内容と異なっているが、replication packageのstata code を実行したところ、上記の結果と一致したため、論文に表記されているstandard errorが誤っていると考えられる。
+
+
+#GIS
+
+```{r}
+library(sf)
+sf_data <- st_read("../Boundaries/cz_boundaries.shp",options=c("ENCODING=CP932"))
+st_crs(sf_data)
+sf_data <- st_set_crs(sf_data, 4326)
+st_crs(sf_data)
+
+workfile_china_reduced <- workfile_china|>select(czone,city,yr,t2,d_tradeusch_pw,d_sh_empl_mfg,d_tradeotch_pw_lag )
+
+workfile_china_reduced <- workfile_china_reduced|>left_join(sf_data,by="czone")|>
+  mutate(quant_dep=ntile(d_sh_empl_mfg, 5),quant_ind=ntile(d_tradeusch_pw, 5),quant_iv=ntile(d_tradeotch_pw_lag, 5))
+
+ggplot(sf_data) + 
+  geom_sf(data=st_as_sf(workfile_china_reduced),aes(fill=quant_ind),color="white")+
+  scale_fill_gradient(low="lightblue", high="darkblue")+
+  coord_sf(xlim= c(-125,-65), ylim = c(25, 50))
+
+ggplot(sf_data) + 
+  geom_sf(data=st_as_sf(workfile_china_reduced),aes(fill=quant_dep),color="white")+
+  scale_fill_gradient(low="lightblue", high="darkblue")+
+  coord_sf(xlim= c(-125,-65), ylim = c(25, 50))
+
+ggplot(sf_data) + 
+  geom_sf(data=st_as_sf(workfile_china_reduced),aes(fill=quant_iv),color="white")+
+  scale_fill_gradient(low="lightblue", high="darkblue")+
+  coord_sf(xlim= c(-125,-65), ylim = c(25, 50))
+#  geom_sf(data=workfile_china_reduced,aes(fill=d_tradeusch_pw),color="white")
+
+#ggplot()
+```
